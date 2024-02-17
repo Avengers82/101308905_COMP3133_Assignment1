@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const { User } = require('./models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -27,7 +27,7 @@ const userResolver = {
         const existingUser = await User.findOne({ $or: [{ username: input.username }, { email: input.email }] });
 
         if (existingUser) {
-          throw new Error('Username or email already exists');
+          return { success: false, message: 'Username or email already exists' };
         }
 
         const hashedPassword = await bcrypt.hash(input.password, 10);
@@ -39,10 +39,9 @@ const userResolver = {
 
         await newUser.save();
 
-        const welcomeMessage = `Welcome, ${input.username}! Your account has been created successfully.`;
-        return { message: welcomeMessage };
+        return { success: true, message: 'Signup successful' };
       } catch (error) {
-        throw new Error(error.message);
+        return { success: false, message: error.message };
       }
     },
     login: async (_, { identifier, password }) => {
@@ -52,20 +51,19 @@ const userResolver = {
         });
 
         if (!user) {
-          throw new Error('User not found');
+          return { success: false, message: 'User not found' };
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-          throw new Error('Invalid password');
+          return { success: false, message: 'Invalid password' };
         }
 
-        // Generate and return a JWT token (optional)
         const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
-        return { message: 'Login successful', token };
+        return { success: true, message: 'Login successful', token };
       } catch (error) {
-        throw new Error(error.message);
+        return { success: false, message: error.message };
       }
     },
     updateUserById: async (_, { _id, input }) => {
@@ -79,9 +77,9 @@ const userResolver = {
     deleteUserById: async (_, { _id }) => {
       try {
         await User.findByIdAndDelete(_id);
-        return { message: 'User deleted successfully' };
+        return { success: true, message: 'User deleted successfully' };
       } catch (error) {
-        throw new Error(error.message);
+        return { success: false, message: error.message };
       }
     },
   },

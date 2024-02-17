@@ -1,4 +1,4 @@
-const { Employee } = require('../models/employee'); // Adjust the path based on your project structure
+const { Employee } = require('./models/employee');
 
 const employeeResolver = {
   Query: {
@@ -40,9 +40,9 @@ const employeeResolver = {
     deleteEmployeeById: async (_, { _id }) => {
       try {
         await Employee.findByIdAndDelete(_id);
-        return 'Employee deleted successfully';
+        return { success: true, message: 'Employee deleted successfully' };
       } catch (error) {
-        throw new Error(error.message);
+        return { success: false, message: error.message };
       }
     },
   },
