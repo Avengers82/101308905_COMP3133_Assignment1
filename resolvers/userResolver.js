@@ -60,7 +60,7 @@ const userResolver = {
           return { success: false, message: 'Invalid password' };
         }
 
-        const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return { success: true, message: 'Login successful', token };
       } catch (error) {
         return { success: false, message: error.message };

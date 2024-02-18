@@ -1,12 +1,12 @@
 const { buildSchema } = require('graphql');
-const { userSchema } = require('./user.js');
+const { userSchema, authResponseTypeDef } = require('./user.js');
 
-const authResponseTypeDef = userSchema.definitions
-  ? userSchema.definitions
-      .filter((def) => def.kind === 'ObjectTypeDefinition' && def.name.value === 'AuthResponse')
-      .map((def) => def.toString())
-      .join('\n')
-  : '';
+// const authResponseTypeDef = userSchema.definitions
+//   ? userSchema.definitions
+//       .filter((def) => def.kind === 'ObjectTypeDefinition' && def.name.value === 'AuthResponse')
+//       .map((def) => def.toString())
+//       .join('\n')
+//   : '';
 
 const employeeSchema = buildSchema(`
   enum Gender {
@@ -40,7 +40,7 @@ const employeeSchema = buildSchema(`
   type Mutation {
     addEmployee(input: EmployeeInput!): Employee!
     updateEmployeeById(_id: ID!, input: EmployeeInput!): Employee
-    deleteEmployeeById(_id: ID!): ${authResponseTypeDef}
+    deleteEmployeeById(_id: ID!): ${authResponseTypeDef || 'AuthResponse'}
   }
 `);
 
