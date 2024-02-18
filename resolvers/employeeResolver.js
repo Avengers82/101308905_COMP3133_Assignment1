@@ -1,4 +1,4 @@
-const { Employee } = require('./models/employee');
+const { Employee } = require('../schema.js');
 
 const employeeResolver = {
   Query: {

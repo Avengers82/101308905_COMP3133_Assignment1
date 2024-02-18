@@ -1,10 +1,9 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
-const userSchema = require('./models/user.js');
-const employeeSchema = require('./models/employee.js');
-const userResolver = require('./userResolver');
-const employeeResolver = require('./employeeResolver');
+const {userSchema, employeeSchema} = require('./schema.js');
+const userResolver = require('./resolvers/userResolver');
+const employeeResolver = require('./resolvers/employeeResolver');
 
 const app = express();
 
